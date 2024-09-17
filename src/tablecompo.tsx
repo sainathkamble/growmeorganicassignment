@@ -1,5 +1,5 @@
 import './index.css';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
@@ -21,7 +21,7 @@ export const TableCompo = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
 
     const fetchArtworks = async (page: number) => {
-        setLoading(true);
+        setLoading(true); setRowClick(rowClick);
         try {
             const response = await fetch(`https://api.artic.edu/api/v1/artworks?page=${page}`);
             const data = await response.json();
@@ -52,13 +52,17 @@ export const TableCompo = () => {
         setCurrentPage(nextPage);  // Update current page, which triggers useEffect to fetch data
     };
 
+    const selectionHandle = (e : any) => {
+        setSelectedProducts(e.value);
+    }
+
     return (
         <div className="flex justify-center items-center p-8">
              
             <DataTable className="border"  value={artworks}
              selectionMode={rowClick ? null : 'checkbox'} 
              selection={selectedProducts!} 
-             onSelectionChange={(e) => setSelectedProducts(e.value)}  
+             onSelectionChange={selectionHandle}  
              paginator rows={5} 
              onPage={onPageChange}
              loading={loading}
